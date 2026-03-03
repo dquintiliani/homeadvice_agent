@@ -21,6 +21,7 @@ def login(credentials: LoginRequest, db: Session = Depends(get_db),) -> LoginRes
     token = create_token({"user":credentials.username,"role":"basic","uid":user_id})
     
     return LoginResponse(
+        responseStatus=True,
         access_token=token,
         token_type="bearer",
     )
@@ -29,16 +30,24 @@ def login(credentials: LoginRequest, db: Session = Depends(get_db),) -> LoginRes
 def signup(credentials: LoginRequest,db: Session = Depends(get_db),):
     res,msg = create_user(credentials.username,credentials.password, db)
     if not res:
-        return res,msg
-    
-    return res,msg
+        print(msg)
+        return LoginResponse(
+        responseStatus=False,
+        access_token=None,
+        token_type="bearer",
+    )
+    print(msg)
+    return LoginResponse(
+        responseStatus=True,
+        access_token=None,
+        token_type="bearer",
+    )
 
 @router.post("/refresh",response_model=LoginResponse)
 def refreshUser(credentials: LoginRequest,db: Session = Depends(get_db),):
     res,msg = create_user(credentials.username,credentials.password, db)
     if not res:
         return res,msg
-    
     return res,msg
 
 

@@ -4,30 +4,20 @@ from sqlalchemy import Column, Integer, String, Boolean
 from sqlalchemy.orm import declarative_base, sessionmaker
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session
+from typing import Generator
 
-SQLALCHEMY_DATABASE_URL = "sqlite:///./users.db"
+DATABASE_URL = "sqlite:///./users.db"
 
-# connect to SQLite; check_same_thread=False is needed for SQLite + FastAPI
 engine = create_engine(
-    SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False}
+    DATABASE_URL,
+    connect_args={"check_same_thread": False},  # only for SQLite
 )
-
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
-Base = declarative_base()
-
-
-
-def init_db():
-    Base.metadata.create_all(bind=engine)
-
-
-def get_db():
+def get_db() -> Generator[Session, None, None]:
     db = SessionLocal()
+    print("get_db created session:", db)  # debug
     try:
         yield db
     finally:
         db.close()
-        
-def get_user_by_username(db: Session, username: str):
-    return db.query(User).filter(User.username == username).first()

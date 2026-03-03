@@ -5,8 +5,9 @@ class LoginRequest(BaseModel):
     password: str
     
 class LoginResponse(BaseModel):
-    access_token: str
-    token_type: str = "bearer"
+    responseStatus: bool
+    access_token: str | None
+    token_type: str = "bearer" 
  
 
 
