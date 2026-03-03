@@ -20,9 +20,7 @@ def refresh_token(token: str) -> str:
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
     except JWTError:
-        # you can raise HTTPException in a FastAPI dependency instead
         raise ValueError("Invalid or expired token")
-
     # Remove old exp/iat/nbf if present
     for claim in ("exp", "iat", "nbf"):
         payload.pop(claim, None)
@@ -33,7 +31,6 @@ def refresh_token(token: str) -> str:
 
 def is_token_valid(token: str) -> bool:
     try:
-        # will raise ExpiredSignatureError if exp is in the past
         jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
         return True
     except ExpiredSignatureError:
@@ -42,3 +39,4 @@ def is_token_valid(token: str) -> bool:
     except JWTError:
         # token is invalid for some other reason
         return False
+    
