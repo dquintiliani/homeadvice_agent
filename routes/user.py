@@ -59,3 +59,12 @@ def refresh(request: Request, response: Response):
         "access_token": new_token,
         "token_type":   "bearer"
     }
+    
+
+from dependencies.auth import auth_required
+
+@router.get("/protected", status_code=200, dependencies=[Depends(auth_required)])
+def protected_route():
+    # FastAPI runs auth_required before this function is called
+    # If the token is invalid, auth_required raises a 401 — we never get here
+    return {"message": "You are authenticated"}
