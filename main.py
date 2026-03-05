@@ -5,15 +5,13 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from routes.auth import router as auth_router  # adjust path/name if different
+from routes.user import router as auth_router  # adjust path/name if different
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     # Startup logic
     print("🚀 Auth Server starting up...")
-    # e.g., you could test DB connectivity here
-
     yield
 
     # Shutdown logic
